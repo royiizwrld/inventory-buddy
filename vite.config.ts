@@ -14,7 +14,7 @@ export default defineConfig({
   },
   vite: {
     optimizeDeps: {
-      include: ["recharts", "papaparse", "react-markdown", "remark-gfm", "jsbarcode", "qrcode", "@radix-ui/react-dropdown-menu", "@radix-ui/react-tabs", "@zxing/browser", "sonner"],
+      include: ["recharts", "papaparse", "react-markdown", "remark-gfm", "jsbarcode", "qrcode", "@radix-ui/react-dropdown-menu", "@radix-ui/react-tabs", "@zxing/browser", "jspdf", "jspdf-autotable", "sonner"],
     },
   },
 });

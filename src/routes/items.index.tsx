@@ -13,6 +13,7 @@ import { StockActions } from "@/components/inventory/StockActions";
 import { ItemFormSheet } from "@/components/inventory/ItemFormSheet";
 import { ConfirmDelete } from "@/components/inventory/ConfirmDelete";
 import { CsvImportDialog } from "@/components/inventory/CsvImportDialog";
+import { LabelButton, ReorderButton } from "@/components/inventory/PlanningActions";
 import { useInventory } from "@/context/InventoryContext";
 import { formatMoney, getStatus, itemValue, itemsToCsv, matchesSearch, STATUS_LABEL } from "@/lib/inventory";
 import type { Item, StockStatus } from "@/lib/types";
@@ -84,6 +85,8 @@ function ItemsPage() {
         title="Items"
         subtitle={`${filtered.length} of ${items.length} items`}
         actions={<>
+          <LabelButton items={filtered} />
+          <ReorderButton items={filtered} />
           <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}><Upload className="h-4 w-4" /> Import CSV</Button>
           <Button variant="outline" size="sm" onClick={exportCsv} disabled={!filtered.length}><Download className="h-4 w-4" /> Export CSV</Button>
           <Button size="sm" onClick={() => { setEditing(null); setFormOpen(true); }}><Plus className="h-4 w-4" /> Add item</Button>

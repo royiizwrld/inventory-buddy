@@ -17,3 +17,5 @@
 - Scanned identifiers use exact matching in `src/lib/scanning.ts`; shared codes require explicit item selection before restocking — prevents stock being added to the wrong item.
 - Color presets override semantic CSS tokens through a root data attribute, independently of light/dark mode — preserves component theming and existing inventory storage.
 - Include lazy camera and tab dependencies in Vite's initial optimization list — prevents late dependency rebuilds from mixing React module versions in an open preview.
+- Asset tracking fields are optional on the shared item type — older local inventory records and existing imports remain compatible.
+- Reorder and warranty calculations are pure helpers in `asset-planning.ts`; PDFs are generated on demand in the browser — keeps planning testable and inventory documents private to the device.
