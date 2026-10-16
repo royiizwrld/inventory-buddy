@@ -8,6 +8,12 @@ const THEMES = [
   { id: "ocean", name: "Ocean", swatch: "bg-theme-ocean" },
   { id: "rose", name: "Rose", swatch: "bg-theme-rose" },
   { id: "graphite", name: "Graphite", swatch: "bg-theme-graphite" },
+  { id: "forest", name: "Forest", swatch: "bg-theme-forest" },
+  { id: "amber", name: "Amber", swatch: "bg-theme-amber" },
+  { id: "coral", name: "Coral", swatch: "bg-theme-coral" },
+  { id: "violet", name: "Violet", swatch: "bg-theme-violet" },
+  { id: "cyan", name: "Cyan", swatch: "bg-theme-cyan" },
+  { id: "olive", name: "Olive", swatch: "bg-theme-olive" },
 ] as const;
 
 export function ThemePicker() {
