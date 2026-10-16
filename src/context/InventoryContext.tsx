@@ -14,7 +14,7 @@ interface Ctx extends InventoryState {
   addItem: (input: ItemInput, source?: MovementSource) => Item;
   updateItem: (id: string, input: ItemInput, reason?: MovementReason) => void;
   deleteItem: (id: string) => void;
-  adjustStock: (id: string, delta: number, opts?: { reason?: MovementReason; source?: MovementSource; note?: string }) => string | null;
+  adjustStock: (id: string, delta: number, opts?: { reason?: MovementReason | undefined; source?: MovementSource; note?: string }) => string | null;
   undoMovement: (movementId: string) => void;
   addCategory: (c: string) => void;
   addLocation: (l: string) => void;

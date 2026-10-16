@@ -29,7 +29,7 @@ export function makeSeed(): InventoryState {
   const movements: Movement[] = [];
   const add = (i: Item, daysAgo: number, change: number, reason?: Movement["reason"]) =>
     movements.push({ id: uid(), itemId: i.id, itemName: i.name, date: d(daysAgo), change, resultingQty: 0, reason, source: change > 0 ? "restock" : "remove" });
-  const [paper, hdmi, , , drill, , usb] = items;
+  const [paper, hdmi, , , drill, , usb] = items as [Item, Item, Item, Item, Item, Item, Item];
   add(paper, 28, 20, "Purchase"); add(paper, 21, -6, "Sale"); add(paper, 14, -5, "Sale"); add(paper, 7, -4, "Sale"); add(paper, 2, -2, "Sale");
   add(hdmi, 40, 10, "Purchase"); add(hdmi, 10, -2, "Sale");
   add(drill, 20, -1, "Damaged");

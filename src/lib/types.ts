@@ -18,7 +18,7 @@ export interface Item {
   itemType: ItemType;
   barcode: string;
   qrCode: string;
-  sample?: boolean;
+  sample?: boolean | undefined;
   createdAt: string;
   updatedAt: string;
 }
@@ -32,9 +32,9 @@ export interface Movement {
   date: string;
   change: number;
   resultingQty: number;
-  reason?: MovementReason;
+  reason?: MovementReason | undefined;
   source: MovementSource;
-  note?: string;
+  note?: string | undefined;
 }
 
 export interface InventoryState {
