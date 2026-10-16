@@ -12,7 +12,7 @@ import { MOVEMENT_REASONS, type Item, type MovementReason } from "@/lib/types";
 function useStockChange() {
   const { adjustStock, undoMovement } = useInventory();
   return (item: Item, delta: number, reason?: MovementReason) => {
-    const id = adjustStock(item.id, delta, { reason });
+    const id = adjustStock(item.id, delta, reason ? { reason } : {});
     if (!id) {
       toast.error(delta < 0 ? "Nothing to remove — quantity is already 0." : "No change made.");
       return;
@@ -29,7 +29,7 @@ function AmountPopover({ item, mode, children }: { item: Item; mode: "add" | "re
   const [amount, setAmount] = useState("");
   const [reason, setReason] = useState<MovementReason>(mode === "add" ? "Purchase" : "Sale");
   const apply = (n: number) => {
-    if (!Number.isFinite(n) || n <= 0) return toast.error("Enter a positive whole number.");
+    if (!Number.isFinite(n) || n <= 0) { toast.error("Enter a positive whole number."); return; }
     change(item, mode === "add" ? Math.floor(n) : -Math.floor(n), reason);
     setOpen(false);
     setAmount("");

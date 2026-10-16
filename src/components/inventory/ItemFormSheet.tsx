@@ -53,7 +53,7 @@ function PickOrAdd({ label, value, options, onChange, onAdd }: { label: string; 
 export function ItemFormSheet({ open, onOpenChange, item }: { open: boolean; onOpenChange: (o: boolean) => void; item?: Item | null }) {
   const { addItem, updateItem, isSkuTaken, categories, locations, addCategory, addLocation } = useInventory();
   const [f, setF] = useState<ItemInput>(blank);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof ItemInput, string>>>({});
 
   useEffect(() => {
     if (open) {
@@ -66,7 +66,7 @@ export function ItemFormSheet({ open, onOpenChange, item }: { open: boolean; onO
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    const er: Record<string, string> = {};
+    const er: Partial<Record<keyof ItemInput, string>> = {};
     if (!f.name.trim()) er.name = "Name is required";
     if (!f.sku.trim()) er.sku = "SKU is required";
     else if (isSkuTaken(f.sku, item?.id)) er.sku = "This SKU is already used by another item";

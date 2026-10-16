@@ -27,7 +27,7 @@ function splitActions(text: string): { body: string; actions: Action[] } {
   const m = text.match(/```actions\s*([\s\S]*?)```/);
   if (!m) return { body: text.replace(/```actions[\s\S]*$/, ""), actions: [] };
   try {
-    const arr = JSON.parse(m[1]);
+    const arr = JSON.parse(m[1] ?? "[]");
     return { body: text.replace(m[0], "").trim(), actions: Array.isArray(arr) ? arr : [] };
   } catch {
     return { body: text.replace(m[0], "").trim(), actions: [] };
