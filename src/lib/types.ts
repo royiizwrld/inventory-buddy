@@ -18,6 +18,10 @@ export interface Item {
   itemType: ItemType;
   barcode: string;
   qrCode: string;
+  purchaseDate?: string | undefined;
+  warrantyExpiry?: string | undefined;
+  assignedPerson?: string | undefined;
+  condition?: string | undefined;
   sample?: boolean | undefined;
   createdAt: string;
   updatedAt: string;
