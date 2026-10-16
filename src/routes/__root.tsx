@@ -42,6 +42,17 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
+    // A stale page after a server update can't load its page code; reload once to get fresh files.
+    const msg = String((error as Error)?.message ?? "");
+    if (/dynamically imported module|Importing a module script failed/i.test(msg)) {
+      const k = "stale-chunk-reload";
+      const last = Number(sessionStorage.getItem(k) || 0);
+      if (Date.now() - last > 10000) {
+        sessionStorage.setItem(k, String(Date.now()));
+        window.location.reload();
+        return;
+      }
+    }
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
