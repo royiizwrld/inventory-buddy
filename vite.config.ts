@@ -12,4 +12,9 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    optimizeDeps: {
+      include: ["recharts", "papaparse", "react-markdown", "remark-gfm", "jsbarcode", "qrcode", "@radix-ui/react-dropdown-menu", "sonner"],
+    },
+  },
 });
