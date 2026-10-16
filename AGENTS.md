@@ -16,3 +16,4 @@
 - Camera decoding uses a dynamically imported ZXing reader in an effect, with explicit stream cleanup — keeps browser camera access out of SSR and releases the camera when scanning ends.
 - Scanned identifiers use exact matching in `src/lib/scanning.ts`; shared codes require explicit item selection before restocking — prevents stock being added to the wrong item.
 - Color presets override semantic CSS tokens through a root data attribute, independently of light/dark mode — preserves component theming and existing inventory storage.
+- Include lazy camera and tab dependencies in Vite's initial optimization list — prevents late dependency rebuilds from mixing React module versions in an open preview.
