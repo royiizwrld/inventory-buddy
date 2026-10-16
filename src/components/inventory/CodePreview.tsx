@@ -31,7 +31,7 @@ export function CodePreview({ barcode, qr }: { barcode?: string; qr?: string }) 
 
   const empty = !barcode && !qr;
   return (
-    <div className="rounded-xl border-2 border-dashed border-border bg-muted/40 p-4">
+    <div className="min-w-0 rounded-xl border-2 border-dashed border-border bg-muted/40 p-4">
       <p className="mb-3 flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
         <ScanLine className="h-4 w-4" /> Barcode / QR preview
       </p>
@@ -40,14 +40,14 @@ export function CodePreview({ barcode, qr }: { barcode?: string; qr?: string }) 
       ) : (
         <div className="flex flex-wrap items-center justify-center gap-6">
           {barcode && (
-            <div className="rounded-lg bg-card p-2">
-              {barErr ? <p className="text-sm text-destructive">Can't render this barcode.</p> : <svg ref={svgRef} />}
+            <div className="max-w-full overflow-x-auto rounded-lg bg-card p-2">
+              {barErr ? <p className="text-sm text-destructive">Can't render this barcode.</p> : <svg ref={svgRef} className="max-w-full" />}
             </div>
           )}
           {qr && qrUrl && (
             <div className="rounded-lg bg-card p-2 text-center">
               <img src={qrUrl} alt={`QR code for ${qr}`} className="h-40 w-40" />
-              <p className="mt-1 font-mono text-xs">{qr}</p>
+              <p className="mt-1 break-all font-mono text-xs">{qr}</p>
             </div>
           )}
         </div>

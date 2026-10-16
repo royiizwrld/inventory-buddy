@@ -63,7 +63,7 @@ function ItemDetail() {
           <Button variant="outline" size="sm" onClick={() => setDel(true)}><Trash2 className="h-4 w-4" /> Delete</Button>
         </div>
       </div>
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-3 [&>*]:min-w-0">
         <Card className="lg:col-span-2">
           <CardHeader><CardTitle className="text-base">Details</CardTitle></CardHeader>
           <CardContent>
