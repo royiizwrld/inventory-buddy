@@ -37,7 +37,6 @@ export const Route = createFileRoute("/api/chat")({
             model: "openai/gpt-6-astra",
             instructions: `${SYSTEM}\n\nDATA:\n${JSON.stringify(body.summary)}`,
             input: body.messages.map((m) => ({ role: m.role, content: m.content })),
-            stream: true,
           });
           return stream.toResponse();
         } catch (e) {

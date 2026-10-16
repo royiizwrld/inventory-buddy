@@ -86,7 +86,7 @@ function Dashboard() {
                   <YAxis tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} tickFormatter={(v) => formatMoney(v)} width={70} />
                   <Tooltip formatter={(v) => formatMoney(Number(v))} contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)", borderRadius: 8 }} cursor={{ fill: "var(--muted)" }} />
                   <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                    {stats.chart.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                    {stats.chart.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length] ?? "var(--chart-1)"} />)}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>

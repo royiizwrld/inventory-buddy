@@ -29,7 +29,7 @@ export const Route = createFileRoute("/bulk")({
 
 interface Row {
   key: string; name: string; quantity: number; unitPrice: number; category: string; location: string;
-  sku: string; qrCode: string; itemType: ItemType; confidence: number; matchId?: string; mode: "new" | "merge";
+  sku: string; qrCode: string; itemType: ItemType; confidence: number; matchId?: string | undefined; mode: "new" | "merge";
 }
 
 const EXAMPLE = "20 A4 paper reams @ 650 shelf B2, 5 office chairs 8500 each store room, HDMI cables x30 - 400, laptop Dell Latitude asset tag LT-014 45000";
@@ -65,7 +65,7 @@ function BulkPage() {
     setError("");
     try {
       if (f.type.startsWith("image/")) {
-        if (f.size > 8_000_000) return toast.error("Image is too large (max 8 MB).");
+        if (f.size > 8_000_000) { toast.error("Image is too large (max 8 MB)."); return; }
         setImage({ url: await readDataUrl(f), name: f.name });
       } else if (f.type === "application/pdf" || f.name.endsWith(".pdf")) {
         setText(await pdfToText(f)); setFileName(f.name);
@@ -101,8 +101,8 @@ function BulkPage() {
 
   const save = () => {
     const newSkus = rows.filter((r) => r.mode === "new").map((r) => r.sku.toLowerCase());
-    if (rows.some((r) => !r.name.trim() || r.quantity < 0 || r.unitPrice < 0)) return toast.error("Fix rows with missing names or negative values.");
-    if (new Set(newSkus).size !== newSkus.length || rows.some((r) => r.mode === "new" && inv.isSkuTaken(r.sku))) return toast.error("Some SKUs are duplicated. Edit them or choose 'Add quantity'.");
+    if (rows.some((r) => !r.name.trim() || r.quantity < 0 || r.unitPrice < 0)) { toast.error("Fix rows with missing names or negative values."); return; }
+    if (new Set(newSkus).size !== newSkus.length || rows.some((r) => r.mode === "new" && inv.isSkuTaken(r.sku))) { toast.error("Some SKUs are duplicated. Edit them or choose 'Add quantity'."); return; }
     let added = 0, merged = 0;
     for (const r of rows) {
       if (r.mode === "merge" && r.matchId) {
