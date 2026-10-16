@@ -16,11 +16,11 @@ export function ThemePicker() {
     const stored = localStorage.getItem("stockroom:color-theme");
     const choice = THEMES.some((t) => t.id === stored) ? stored ?? "ledger" : "ledger";
     setTheme(choice);
-    document.documentElement.dataset.theme = choice;
+    document.documentElement.dataset["theme"] = choice;
   }, []);
   const choose = (id: string) => {
     setTheme(id);
-    document.documentElement.dataset.theme = id;
+    document.documentElement.dataset["theme"] = id;
     localStorage.setItem("stockroom:color-theme", id);
   };
   return <DropdownMenu>
