@@ -13,6 +13,7 @@ import type { Item, ItemInput } from "@/lib/types";
 const blank: ItemInput = {
   name: "", sku: "", category: "Other", quantity: 0, unitPrice: 0, location: "", reorderLevel: DEFAULT_REORDER_LEVEL,
   notes: "", itemType: "inventory", barcode: "", qrCode: "",
+  purchaseDate: "", warrantyExpiry: "", assignedPerson: "", condition: "",
 };
 
 /** Field for a code value. `onScan` slot is where a camera scanner can be wired in later. */
@@ -73,6 +74,7 @@ export function ItemFormSheet({ open, onOpenChange, item }: { open: boolean; onO
     if (!Number.isFinite(f.quantity) || f.quantity < 0 || !Number.isInteger(f.quantity)) er.quantity = "Quantity must be a whole number, 0 or more";
     if (!Number.isFinite(f.unitPrice) || f.unitPrice < 0) er.unitPrice = "Price can't be negative";
     if (!Number.isFinite(f.reorderLevel) || f.reorderLevel < 0) er.reorderLevel = "Reorder level can't be negative";
+    if (f.itemType === "asset" && f.purchaseDate && f.warrantyExpiry && f.warrantyExpiry < f.purchaseDate) er.warrantyExpiry = "Warranty expiry must be on or after the purchase date";
     setErrors(er);
     if (Object.keys(er).length) return;
     const clean = { ...f, name: f.name.trim(), sku: f.sku.trim(), barcode: f.barcode.trim(), qrCode: f.qrCode.trim() };
@@ -131,6 +133,13 @@ export function ItemFormSheet({ open, onOpenChange, item }: { open: boolean; onO
             <div />
             <CodeField id="barcode" label="Barcode" value={f.barcode} onChange={(v) => set("barcode", v)} />
             <CodeField id="qr" label="QR code / asset tag" value={f.qrCode} onChange={(v) => set("qrCode", v)} />
+            {f.itemType === "asset" && <>
+              <h3 className="border-t pt-3 font-semibold sm:col-span-2">Asset tracking</h3>
+              <div className="space-y-1.5"><Label htmlFor="purchaseDate">Purchase date</Label><Input id="purchaseDate" type="date" value={f.purchaseDate ?? ""} onChange={(e) => set("purchaseDate", e.target.value)} /></div>
+              <div className="space-y-1.5"><Label htmlFor="warrantyExpiry">Warranty expiry</Label><Input id="warrantyExpiry" type="date" min={f.purchaseDate || undefined} value={f.warrantyExpiry ?? ""} onChange={(e) => set("warrantyExpiry", e.target.value)} />{errors.warrantyExpiry && <p className="text-xs text-destructive">{errors.warrantyExpiry}</p>}</div>
+              <div className="space-y-1.5"><Label htmlFor="assignedPerson">Assigned person</Label><Input id="assignedPerson" value={f.assignedPerson ?? ""} onChange={(e) => set("assignedPerson", e.target.value)} /></div>
+              <div className="space-y-1.5"><Label htmlFor="condition">Condition</Label><Select value={f.condition || "__none"} onValueChange={(v) => set("condition", v === "__none" ? "" : v)}><SelectTrigger id="condition"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="__none">Not specified</SelectItem>{["New", "Good", "Fair", "Poor", "Needs repair", "Retired"].map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent></Select></div>
+            </>}
             <div className="space-y-1.5 sm:col-span-2">
               <Label htmlFor="notes">Notes</Label>
               <Textarea id="notes" value={f.notes} onChange={(e) => set("notes", e.target.value)} rows={3} />

@@ -12,6 +12,9 @@ import { ConfirmDelete } from "@/components/inventory/ConfirmDelete";
 import { CodePreview } from "@/components/inventory/CodePreview";
 import { useInventory } from "@/context/InventoryContext";
 import { formatMoney, getStatus, itemValue } from "@/lib/inventory";
+import { suggestedReorder } from "@/lib/asset-planning";
+import { LabelButton } from "@/components/inventory/PlanningActions";
+import { WarrantyAlerts } from "@/components/inventory/WarrantyAlerts";
 
 export const Route = createFileRoute("/items/$id")({
   head: () => ({
@@ -59,6 +62,7 @@ function ItemDetail() {
         </div>
         <div className="flex flex-wrap gap-2">
           <StockActions item={item} />
+          <LabelButton items={[item]} />
           <Button variant="outline" size="sm" onClick={() => setEdit(true)}><Pencil className="h-4 w-4" /> Edit</Button>
           <Button variant="outline" size="sm" onClick={() => setDel(true)}><Trash2 className="h-4 w-4" /> Delete</Button>
         </div>
@@ -74,9 +78,16 @@ function ItemDetail() {
               {field("Category", item.category)}
               {field("Location", item.location)}
               {field("Reorder level", item.reorderLevel)}
+              {item.itemType !== "asset" && field("Suggested reorder quantity", suggestedReorder(item))}
               {field("Type", item.itemType === "asset" ? "Fixed asset" : "Inventory item")}
               {field("Barcode", item.barcode && <span className="font-mono">{item.barcode}</span>)}
               {field("QR code / asset tag", item.qrCode && <span className="font-mono">{item.qrCode}</span>)}
+              {item.itemType === "asset" && <>
+                {field("Purchase date", item.purchaseDate)}
+                {field("Warranty expiry", item.warrantyExpiry)}
+                {field("Assigned person", item.assignedPerson)}
+                {field("Condition", item.condition)}
+              </>}
             </dl>
             {item.notes && <p className="mt-4 rounded-lg bg-muted p-3 text-sm">{item.notes}</p>}
           </CardContent>
@@ -120,6 +131,7 @@ function ItemDetail() {
           </CardContent>
         </Card>
       </div>
+      {item.itemType === "asset" && <WarrantyAlerts items={[item]} />}
       <ItemFormSheet open={edit} onOpenChange={setEdit} item={item} />
       <ConfirmDelete item={del ? item : null} onCancel={() => setDel(false)} onConfirm={() => { deleteItem(item.id); toast.success(`Deleted ${item.name}`); navigate({ to: "/items" }); }} />
     </>

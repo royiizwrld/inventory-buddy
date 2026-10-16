@@ -10,6 +10,9 @@ import { StatusBadge } from "@/components/inventory/StatusBadge";
 import { StockActions } from "@/components/inventory/StockActions";
 import { useInventory } from "@/context/InventoryContext";
 import { formatMoney, getStatus, itemValue } from "@/lib/inventory";
+import { suggestedReorder } from "@/lib/asset-planning";
+import { ReorderButton } from "@/components/inventory/PlanningActions";
+import { WarrantyAlerts } from "@/components/inventory/WarrantyAlerts";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -62,11 +65,11 @@ function Dashboard() {
       <PageHeader
         title="Dashboard"
         subtitle="Your stock at a glance"
-        actions={hasSample && (
+        actions={<><ReorderButton items={items} />{hasSample && (
           <Button variant="outline" size="sm" onClick={() => { clearSample(); toast.success("Sample data cleared"); }}>
             <Trash2 className="h-4 w-4" /> Clear sample data
           </Button>
-        )}
+        )}</>}
       />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat label="Total items" value={ready ? String(items.length) : "—"} icon={Boxes} />
@@ -104,6 +107,7 @@ function Dashboard() {
                   <p className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
                     <StatusBadge status={getStatus(i)} /> {i.quantity} left · reorder at {i.reorderLevel}
                   </p>
+                  {i.itemType !== "asset" && <p className="mt-1 text-xs text-muted-foreground">Suggested reorder: {suggestedReorder(i)} units</p>}
                 </div>
                 <StockActions item={i} compact />
               </div>
@@ -111,6 +115,7 @@ function Dashboard() {
           </CardContent>
         </Card>
       </div>
+      <WarrantyAlerts items={items} />
     </>
   );
 }
