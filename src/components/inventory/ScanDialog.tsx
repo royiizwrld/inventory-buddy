@@ -10,6 +10,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useInventory } from "@/context/InventoryContext";
 import { findScannedItems, validStockAmount } from "@/lib/scanning";
 import { CameraScanner } from "./CameraScanner";
+import { ItemFormSheet } from "./ItemFormSheet";
 
 export function ScanDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   return <Dialog open={open} onOpenChange={onOpenChange}>
@@ -31,6 +32,7 @@ function ScanContent({ close }: { close: () => void }) {
   const [selected, setSelected] = useState("");
   const [amount, setAmount] = useState("1");
   const [saved, setSaved] = useState(false);
+  const [creating, setCreating] = useState(false);
   const matches = findScannedItems(items, code);
   const item = matches.find((i) => i.id === selected) ?? (matches.length === 1 ? matches[0] : undefined);
   const units = validStockAmount(amount);
@@ -42,7 +44,7 @@ function ScanContent({ close }: { close: () => void }) {
     </Tabs>
     {!code ? <CameraScanner onRead={(value) => { setCode(value); setSaved(false); }} /> : <>
       <p className="break-all rounded-md bg-muted px-3 py-2 font-mono text-sm">{code}</p>
-      {!matches.length ? <div className="space-y-3"><p role="status" className="text-sm text-muted-foreground">No item has this barcode, QR tag or SKU.</p><Button className="w-full" onClick={() => setCreating(true)}><Plus className="h-4 w-4" /> Create item with this code</Button><ItemFormSheet open={creating} onOpenChange={(o) => { setCreating(o); if (!o && findScannedItems(itemsRef(), code).length) close(); }} defaults={{ barcode: code }} /></div> : <>
+      {!matches.length ? <div className="space-y-3"><p role="status" className="text-sm text-muted-foreground">No item has this barcode, QR tag or SKU.</p><Button className="w-full" onClick={() => setCreating(true)}><Plus className="h-4 w-4" /> Create item with this code</Button><ItemFormSheet open={creating} onOpenChange={setCreating} defaults={{ barcode: code }} /></div> : <>
         {matches.length > 1 && <div className="space-y-2"><p className="text-sm text-warning-foreground">Multiple items share this code. Select an item.</p>{matches.map((match) => <Button key={match.id} variant={selected === match.id ? "secondary" : "outline"} className="h-auto w-full justify-start whitespace-normal text-left" onClick={() => { setSelected(match.id); setSaved(false); }}><span>{match.name} · {match.sku}</span></Button>)}</div>}
         {item && <div className="space-y-3">
           <div><h3 className="break-words text-lg font-semibold">{item.name}</h3><p className="text-sm text-muted-foreground">{item.sku} · {item.quantity} units in stock</p>{item.location && <p className="text-sm text-muted-foreground">{item.location}</p>}</div>
