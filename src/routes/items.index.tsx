@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowDown, ArrowUp, ArrowUpDown, Download, MoreHorizontal, Pencil, Plus, Search, SearchX, Trash2, Upload, X } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, Download, FileSpreadsheet, FileText, MoreHorizontal, Pencil, Plus, Printer, Search, SearchX, Trash2, Upload, X } from "lucide-react";
+import { inventoryPdf, printPdf } from "@/lib/inventory-documents";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,6 +71,17 @@ function ItemsPage() {
     toast.success(`Exported ${filtered.length} items`);
   };
 
+  const [busy, setBusy] = useState(false);
+  const pdfAction = async (print: boolean) => {
+    setBusy(true);
+    try {
+      const doc = await inventoryPdf(filtered);
+      if (print) printPdf(doc);
+      else { doc.save(`inventory-${new Date().toISOString().slice(0, 10)}.pdf`); toast.success(`Exported ${filtered.length} items as PDF`); }
+    } catch { toast.error(print ? "Could not open the print view. Allow pop-ups and try again." : "Could not create the PDF. Please try again."); }
+    finally { setBusy(false); }
+  };
+
   const Th = ({ k, label, right }: { k: SortKey; label: string; right?: boolean }) => (
     <th className={`p-3 font-medium ${right ? "text-right" : "text-left"}`}>
       <button className="inline-flex items-center gap-1 hover:text-foreground" onClick={() => setSort((s) => ({ key: k, dir: s.key === k ? (-s.dir as 1 | -1) : 1 }))}>
@@ -87,8 +99,21 @@ function ItemsPage() {
         actions={<>
           <LabelButton items={filtered} />
           <ReorderButton items={filtered} />
-          <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}><Upload className="h-4 w-4" /> Import CSV</Button>
-          <Button variant="outline" size="sm" onClick={exportCsv} disabled={!filtered.length}><Download className="h-4 w-4" /> Export CSV</Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild><Button variant="outline" size="sm"><Upload className="h-4 w-4" /> Import <ChevronDown className="h-4 w-4" /></Button></DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setImportOpen(true)}><FileSpreadsheet className="h-4 w-4" /> Import CSV</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => void navigate({ to: "/bulk" })}><FileText className="h-4 w-4" /> Import PDF</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild><Button variant="outline" size="sm" disabled={!filtered.length || busy}><Download className="h-4 w-4" /> {busy ? "Preparing…" : "Export"} <ChevronDown className="h-4 w-4" /></Button></DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={exportCsv}><FileSpreadsheet className="h-4 w-4" /> Export CSV</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => void pdfAction(false)}><FileText className="h-4 w-4" /> Export PDF</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => void pdfAction(true)}><Printer className="h-4 w-4" /> Print list</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button size="sm" onClick={() => { setEditing(null); setFormOpen(true); }}><Plus className="h-4 w-4" /> Add item</Button>
         </>}
       />
