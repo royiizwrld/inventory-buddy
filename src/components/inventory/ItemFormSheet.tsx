@@ -51,16 +51,17 @@ function PickOrAdd({ label, value, options, onChange, onAdd }: { label: string; 
   );
 }
 
-export function ItemFormSheet({ open, onOpenChange, item }: { open: boolean; onOpenChange: (o: boolean) => void; item?: Item | null }) {
+export function ItemFormSheet({ open, onOpenChange, item, defaults }: { open: boolean; onOpenChange: (o: boolean) => void; item?: Item | null; defaults?: Partial<ItemInput> | undefined }) {
   const { addItem, updateItem, isSkuTaken, categories, locations, addCategory, addLocation } = useInventory();
   const [f, setF] = useState<ItemInput>(blank);
   const [errors, setErrors] = useState<Partial<Record<keyof ItemInput, string>>>({});
 
   useEffect(() => {
     if (open) {
-      setF(item ? { ...blank, ...item } : blank);
+      setF(item ? { ...blank, ...item } : { ...blank, ...defaults });
       setErrors({});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, item]);
 
   const set = <K extends keyof ItemInput>(k: K, v: ItemInput[K]) => setF((p) => ({ ...p, [k]: v }));

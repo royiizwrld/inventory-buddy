@@ -42,7 +42,7 @@ function ScanContent({ close }: { close: () => void }) {
     </Tabs>
     {!code ? <CameraScanner onRead={(value) => { setCode(value); setSaved(false); }} /> : <>
       <p className="break-all rounded-md bg-muted px-3 py-2 font-mono text-sm">{code}</p>
-      {!matches.length ? <p role="status" className="text-sm text-muted-foreground">No item has this barcode, QR tag or SKU.</p> : <>
+      {!matches.length ? <div className="space-y-3"><p role="status" className="text-sm text-muted-foreground">No item has this barcode, QR tag or SKU.</p><Button className="w-full" onClick={() => setCreating(true)}><Plus className="h-4 w-4" /> Create item with this code</Button><ItemFormSheet open={creating} onOpenChange={(o) => { setCreating(o); if (!o && findScannedItems(itemsRef(), code).length) close(); }} defaults={{ barcode: code }} /></div> : <>
         {matches.length > 1 && <div className="space-y-2"><p className="text-sm text-warning-foreground">Multiple items share this code. Select an item.</p>{matches.map((match) => <Button key={match.id} variant={selected === match.id ? "secondary" : "outline"} className="h-auto w-full justify-start whitespace-normal text-left" onClick={() => { setSelected(match.id); setSaved(false); }}><span>{match.name} · {match.sku}</span></Button>)}</div>}
         {item && <div className="space-y-3">
           <div><h3 className="break-words text-lg font-semibold">{item.name}</h3><p className="text-sm text-muted-foreground">{item.sku} · {item.quantity} units in stock</p>{item.location && <p className="text-sm text-muted-foreground">{item.location}</p>}</div>
