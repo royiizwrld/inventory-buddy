@@ -40,13 +40,19 @@ function ScanContent({ close }: { close: () => void }) {
 
   return <div className="space-y-4">
     <Tabs value={mode} onValueChange={setMode}>
-      <TabsList className="grid w-full grid-cols-2"><TabsTrigger value="lookup">Look up item</TabsTrigger><TabsTrigger value="stock">Add stock</TabsTrigger></TabsList>
+      <TabsList className="grid w-full grid-cols-3"><TabsTrigger value="lookup">Look up</TabsTrigger><TabsTrigger value="stock">Add stock</TabsTrigger><TabsTrigger value="new">New item</TabsTrigger></TabsList>
     </Tabs>
     {!code ? <CameraScanner onRead={(value) => { setCode(value); setSaved(false); }} /> : <>
       <p className="break-all rounded-md bg-muted px-3 py-2 font-mono text-sm">{code}</p>
-      {!matches.length ? <div className="space-y-3"><p role="status" className="text-sm text-muted-foreground">No item has this barcode, QR tag or SKU.</p><Button className="w-full" onClick={() => setCreating(true)}><Plus className="h-4 w-4" /> Create item with this code</Button><ItemFormSheet open={creating} onOpenChange={setCreating} defaults={{ barcode: code }} /></div> : <>
+      {!matches.length ? <div className="space-y-3"><p role="status" className="text-sm text-muted-foreground">{mode === "new" ? "This code is new — register it as an item." : "No item has this barcode, QR tag or SKU."}</p><Button className="w-full" onClick={() => setCreating(true)}><Plus className="h-4 w-4" /> Create item with this code</Button><ItemFormSheet open={creating} onOpenChange={setCreating} defaults={{ barcode: code }} /></div> : <>
+        {mode === "new" && <div role="alert" className="rounded-md border border-warning/40 bg-warning/10 p-3 text-sm">This code is already used by {matches.length === 1 ? "an existing item" : `${matches.length} items`}. Add stock to it instead of creating a duplicate.</div>}
         {matches.length > 1 && <div className="space-y-2"><p className="text-sm text-warning-foreground">Multiple items share this code. Select an item.</p>{matches.map((match) => <Button key={match.id} variant={selected === match.id ? "secondary" : "outline"} className="h-auto w-full justify-start whitespace-normal text-left" onClick={() => { setSelected(match.id); setSaved(false); }}><span>{match.name} · {match.sku}</span></Button>)}</div>}
-        {item && <div className="space-y-3">
+        {item && mode === "new" && <div className="space-y-3">
+          <div><h3 className="break-words text-lg font-semibold">{item.name}</h3><p className="text-sm text-muted-foreground">{item.sku} · {item.quantity} units in stock</p></div>
+          <Button className="w-full" onClick={() => setMode("stock")}><Plus className="h-4 w-4" /> Add stock to this item instead</Button>
+          <Button variant="outline" className="w-full" onClick={() => { close(); void navigate({ to: "/items/$id", params: { id: item.id } }); }}>Open item details <ArrowRight className="h-4 w-4" /></Button>
+        </div>}
+        {item && mode !== "new" && <div className="space-y-3">
           <div><h3 className="break-words text-lg font-semibold">{item.name}</h3><p className="text-sm text-muted-foreground">{item.sku} · {item.quantity} units in stock</p>{item.location && <p className="text-sm text-muted-foreground">{item.location}</p>}</div>
           {mode === "lookup" ? <Button className="w-full" onClick={() => { close(); void navigate({ to: "/items/$id", params: { id: item.id } }); }}>Open item <ArrowRight className="h-4 w-4" /></Button> : <>
             <div className="space-y-1.5"><Label htmlFor="scan-amount">Units to add</Label><Input id="scan-amount" type="number" min="1" step="1" value={amount} disabled={saved} onChange={(e) => setAmount(e.target.value)} />{!units && <p className="text-xs text-destructive">Enter a positive whole number.</p>}</div>
