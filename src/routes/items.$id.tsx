@@ -49,7 +49,7 @@ function ItemDetail() {
   );
 
   const field = (label: string, value: React.ReactNode) => (
-    <div><dt className="text-xs uppercase tracking-wider text-muted-foreground">{label}</dt><dd className="mt-0.5 font-medium">{value || <span className="text-muted-foreground">—</span>}</dd></div>
+    <div><dt className="text-xs uppercase tracking-wider text-muted-foreground">{label}</dt><dd className="mt-0.5 break-words font-medium">{value === 0 ? 0 : value || <span className="text-muted-foreground">—</span>}</dd></div>
   );
 
   return (
