@@ -1,5 +1,5 @@
 import type { Item } from "./types";
-import { labelCode, reorderItems, suggestedReorder } from "./asset-planning";
+import { labelCode, reorderLines, type ReorderOverrides } from "./asset-planning";
 
 export async function labelsPdf(items: Item[]) {
   const [{ jsPDF }, QR] = await Promise.all([import("jspdf"), import("qrcode")]);
@@ -23,15 +23,15 @@ export async function labelsPdf(items: Item[]) {
   return doc;
 }
 
-export async function reorderPdf(items: Item[]) {
+export async function reorderPdf(items: Item[], overrides?: ReorderOverrides) {
   const [{ jsPDF }, { default: autoTable }] = await Promise.all([import("jspdf"), import("jspdf-autotable")]);
   const doc = new jsPDF({ orientation: "landscape" });
   doc.setFontSize(18);
   doc.text("Stockroom — Reorder list", 14, 18);
   doc.setFontSize(10);
-  doc.text(`Created ${new Date().toLocaleDateString()} · Target: twice reorder level (minimum 1 unit)`, 14, 26);
+  doc.text(`Created ${new Date().toLocaleDateString()}`, 14, 26);
   autoTable(doc, { startY: 32, head: [["Name", "SKU", "Location", "Current", "Level", "Order", "Unit price", "Est. cost"]],
-    body: reorderItems(items).map((i) => [i.name, i.sku, i.location, i.quantity, i.reorderLevel, suggestedReorder(i), i.unitPrice.toFixed(2), (suggestedReorder(i) * i.unitPrice).toFixed(2)]), styles: { fontSize: 9 }, theme: "grid" });
+    body: reorderLines(items, overrides).map(({ item: i, qty }) => [i.name, i.sku, i.location, i.quantity, i.reorderLevel, qty, i.unitPrice.toFixed(2), (qty * i.unitPrice).toFixed(2)]), styles: { fontSize: 9 }, theme: "grid" });
   return doc;
 }
 

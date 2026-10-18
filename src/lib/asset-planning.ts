@@ -20,12 +20,24 @@ export function warrantyStatus(item: Item, today: string): "expired" | "expiring
 
 export function labelCode(item: Item) { return item.qrCode.trim() || item.sku.trim(); }
 
-export function reorderCsv(items: Item[]) {
+/** Custom order quantities keyed by item id; 0 removes the item from the list. */
+export type ReorderOverrides = Record<string, number>;
+
+export function orderQuantity(item: Item, overrides?: ReorderOverrides) {
+  const o = overrides?.[item.id];
+  return o !== undefined && Number.isSafeInteger(o) && o >= 0 ? o : suggestedReorder(item);
+}
+
+export function reorderLines(items: Item[], overrides?: ReorderOverrides) {
+  return reorderItems(items).map((item) => ({ item, qty: orderQuantity(item, overrides) })).filter((l) => l.qty > 0);
+}
+
+export function reorderCsv(items: Item[], overrides?: ReorderOverrides) {
   const cell = (v: string | number) => {
     const s = String(v);
     const safe = /^[=+\-@\t\r]/.test(s) ? `'${s}` : s;
     return `"${safe.replace(/"/g, '""')}"`;
   };
-  return ["Name,SKU,Location,Current quantity,Reorder level,Suggested quantity,Unit price,Estimated cost",
-    ...reorderItems(items).map((i) => [i.name, i.sku, i.location, i.quantity, i.reorderLevel, suggestedReorder(i), i.unitPrice, suggestedReorder(i) * i.unitPrice].map(cell).join(","))].join("\r\n");
+  return ["Name,SKU,Location,Current quantity,Reorder level,Order quantity,Unit price,Estimated cost",
+    ...reorderLines(items, overrides).map(({ item: i, qty }) => [i.name, i.sku, i.location, i.quantity, i.reorderLevel, qty, i.unitPrice, qty * i.unitPrice].map(cell).join(","))].join("\r\n");
 }
