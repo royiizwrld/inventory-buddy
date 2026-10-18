@@ -45,10 +45,9 @@ export function ReorderButton({ items }: { items: Item[] }) {
             <td className="p-2"><Checkbox aria-label={`Include ${i.name}`} checked={included} onCheckedChange={(c) => setOverrides((o) => { const n = { ...o }; if (c) delete n[i.id]; else n[i.id] = 0; return n; })} /></td>
             <td className="p-2">{i.name}<p className="font-mono text-xs text-muted-foreground">{i.sku}</p></td><td className="p-2">{i.location || "—"}</td><td className="p-2">{i.quantity}</td><td className="p-2">{i.reorderLevel}</td>
             <td className="p-2"><Input aria-label={`Order quantity for ${i.name}`} type="number" min={0} step={1} inputMode="numeric" className="h-8 w-20" value={qty} onChange={(e) => setQty(i.id, e.target.value)} />{overrides[i.id] !== undefined && overrides[i.id] !== suggestedReorder(i) && <p className="text-xs text-muted-foreground">Suggested {suggestedReorder(i)}</p>}</td>
-            <td className="p-2">{(qty * i.unitPrice).toFixed(2)}</td></tr>;
-        })}</tbody></table></div>
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-sm text-muted-foreground">{lines.length} items · Est. total {total.toFixed(2)}</p>
+            <td className="p-2">{formatCurrency(qty * i.unitPrice)}</td></tr>;
+...
+          <p className="text-sm text-muted-foreground">{lines.length} items · Est. total {formatCurrency(total)}</p>
           <div className="flex gap-2">
           {edited && <Button variant="ghost" onClick={() => setOverrides({})}><RotateCcw className="h-4 w-4" /> Reset to suggestions</Button>}
           <DropdownMenu>

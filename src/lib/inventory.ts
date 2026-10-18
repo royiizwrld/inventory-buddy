@@ -21,7 +21,7 @@ export function itemValue(i: Pick<Item, "quantity" | "unitPrice">) {
 }
 
 export function formatMoney(n: number) {
-  return new Intl.NumberFormat(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 0 }).format(n);
+  return formatCurrency(n);
 }
 
 export function uid() {
