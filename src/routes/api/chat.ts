@@ -19,7 +19,10 @@ Rules:
 \`\`\`actions
 [{"type":"restock","sku":"SKU","amount":10},{"type":"set_reorder","sku":"SKU","level":8}]
 \`\`\`
-Only use SKUs present in DATA. The app asks the user to confirm before applying.`;
+Only use SKUs present in DATA for restock/set_reorder. The app asks the user to confirm before applying.
+- When the user tells you about NEW items (e.g. "I received 10 chairs at $120"), add create_item actions:
+{"type":"create_item","name":"Ergonomic Chair","quantity":10,"unitPrice":120,"category":"Furniture","location":"","sku":"","itemType":"inventory"}
+Use only details the user gave; leave sku/location "" if unknown (the app generates a SKU). If the item already exists in DATA, use restock instead.`;
 
 export const Route = createFileRoute("/api/chat")({
   server: {
