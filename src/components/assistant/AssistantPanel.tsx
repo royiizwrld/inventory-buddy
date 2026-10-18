@@ -11,7 +11,10 @@ import { useInventory } from "@/context/InventoryContext";
 import { buildSummary } from "@/lib/inventory";
 
 type Msg = { role: "user" | "assistant"; content: string };
-type Action = { type: "restock"; sku: string; amount: number } | { type: "set_reorder"; sku: string; level: number };
+type Action =
+  | { type: "restock"; sku: string; amount: number }
+  | { type: "set_reorder"; sku: string; level: number }
+  | { type: "create_item"; name: string; quantity?: number; unitPrice?: number; category?: string; location?: string; sku?: string; itemType?: string };
 
 const STARTERS = [
   "What should I reorder this week?",
@@ -107,6 +110,27 @@ export function AssistantPanel() {
   const apply = (actions: Action[]) => {
     let n = 0;
     for (const a of actions) {
+      if (a.type === "create_item") {
+        const name = String(a.name ?? "").trim();
+        if (!name) continue;
+        let sku = String(a.sku ?? "").trim();
+        if (!sku || inv.isSkuTaken(sku)) {
+          const base = name.replace(/[^a-z0-9]+/gi, "").slice(0, 4).toUpperCase() || "ITEM";
+          let k = 1;
+          do { sku = `${base}-${String(Math.floor(Math.random() * 9000) + 1000)}`; k++; } while (inv.isSkuTaken(sku) && k < 20);
+        }
+        const qty = Math.max(0, Math.floor(Number(a.quantity) || 0));
+        const price = Math.max(0, Number(a.unitPrice) || 0);
+        const category = a.category && inv.categories.includes(a.category) ? a.category : "Other";
+        const location = String(a.location ?? "").trim();
+        if (location && !inv.locations.includes(location)) inv.addLocation(location);
+        inv.addItem({
+          name, sku, category, quantity: qty, unitPrice: price, location, reorderLevel: 5, notes: "Added by assistant",
+          itemType: a.itemType === "asset" ? "asset" : "inventory", barcode: "", qrCode: "",
+        }, "assistant");
+        n++;
+        continue;
+      }
       const item = inv.items.find((i) => i.sku.toLowerCase() === String(a.sku).toLowerCase());
       if (!item) continue;
       if (a.type === "restock" && a.amount > 0) { inv.adjustStock(item.id, Math.floor(a.amount), { reason: "Purchase", source: "assistant" }); n++; }
