@@ -30,3 +30,10 @@ it("QR labels reuse the asset tag or fall back to a scannable SKU", () => {
   expect(labelCode(base)).toBe("CAB-1");
   expect(labelCode({ ...base, qrCode: "ASSET-1" })).toBe("ASSET-1");
 });
+import { reorderLines as _rl, reorderCsv as _rc } from "./asset-planning";
+describe("reorder overrides", () => {
+  const it0 = { id: "a", name: "Pens", sku: "P1", location: "", quantity: 1, reorderLevel: 5, unitPrice: 2, itemType: "inventory" } as any;
+  it("custom quantity replaces suggestion", () => { expect(_rl([it0], { a: 20 })[0]!.qty).toBe(20); expect(_rc([it0], { a: 20 })).toContain('"20","2","40"'); });
+  it("zero removes item", () => { expect(_rl([it0], { a: 0 })).toHaveLength(0); });
+  it("no override uses suggestion", () => { expect(_rl([it0])[0]!.qty).toBe(9); });
+});
