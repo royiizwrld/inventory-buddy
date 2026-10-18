@@ -184,7 +184,7 @@ export function AssistantPanel() {
                   <div className="mt-1 flex flex-wrap items-center gap-2">
                     {actions.length > 0 && !(busy && i === msgs.length - 1) && (
                       <Button size="sm" onClick={() => setPending(actions)}>
-                        {actions.every((a) => a.type === "restock") ? "Restock these items" : actions.every((a) => a.type === "set_reorder") ? "Update reorder levels" : "Apply suggested changes"}
+                        {actions.every((a) => a.type === "create_item") ? "Add these items" : actions.every((a) => a.type === "restock") ? "Restock these items" : actions.every((a) => a.type === "set_reorder") ? "Update reorder levels" : "Apply suggested changes"}
                       </Button>
                     )}
                     <Button size="sm" variant="ghost" className="h-7 opacity-60 group-hover:opacity-100" onClick={() => { navigator.clipboard.writeText(body); toast.success("Copied"); }}>
@@ -210,7 +210,7 @@ export function AssistantPanel() {
             <AlertDialogDescription asChild>
               <ul className="list-disc space-y-1 pl-5 text-sm">
                 {pending?.map((a, i) => (
-                  <li key={i}>{a.type === "restock" ? `Restock ${itemName(a.sku)} by +${a.amount}` : `Set reorder level of ${itemName(a.sku)} to ${a.level}`}</li>
+                  <li key={i}>{a.type === "create_item" ? `Add new item ${a.name} (qty ${Math.max(0, Math.floor(Number(a.quantity) || 0))}${a.unitPrice ? `, ${a.unitPrice} each` : ""})` : a.type === "restock" ? `Restock ${itemName(a.sku)} by +${a.amount}` : `Set reorder level of ${itemName(a.sku)} to ${a.level}`}</li>
                 ))}
               </ul>
             </AlertDialogDescription>
