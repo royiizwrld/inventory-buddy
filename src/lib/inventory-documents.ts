@@ -1,5 +1,5 @@
 import type { Item } from "./types";
-import { labelCode, reorderItems, suggestedReorder } from "./asset-planning";
+import { labelCode, reorderLines, type ReorderOverrides } from "./asset-planning";
 
 export async function labelsPdf(items: Item[]) {
   const [{ jsPDF }, QR] = await Promise.all([import("jspdf"), import("qrcode")]);
