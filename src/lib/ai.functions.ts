@@ -39,9 +39,9 @@ Rules:
 - confidence 0..1: lower it when you guessed quantity, price, or name.
 - Never invent items that are not in the input.`;
     const content: Array<{ type: "input_text"; text: string } | { type: "input_image"; image_url: string; detail: "auto" }> = [];
-    if (data.text?.trim()) content.push({ type: "input_text", text: data.text });
+    if (data.text?.trim()) content.push({ type: "input_text", text: `Extract the following items as JSON:\n${data.text}` });
     if (data.imageDataUrl) content.push({ type: "input_image", image_url: data.imageDataUrl, detail: "auto" });
-    if (!data.text?.trim()) content.push({ type: "input_text", text: "Extract the items from this image." });
+    if (!data.text?.trim()) content.push({ type: "input_text", text: "Extract the items from this image as JSON." });
     try {
       const res = await generateResponse({
         model: "openai/gpt-6-astra",
