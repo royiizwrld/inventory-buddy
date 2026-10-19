@@ -1,3 +1,4 @@
+import { formatCurrency } from "@/lib/currency";
 import { useState } from "react";
 import { ChevronDown, Download, FileSpreadsheet, FileText, ListPlus, Printer, RotateCcw } from "lucide-react";
 import { toast } from "sonner";

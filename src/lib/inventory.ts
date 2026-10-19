@@ -1,3 +1,4 @@
+import { formatCurrency } from "./currency";
 import type { Item, Movement, StockStatus } from "./types";
 
 export const DEFAULT_CATEGORIES = ["Electronics", "Office Supplies", "Furniture", "Tools", "Other"];
