@@ -1,3 +1,4 @@
+import { getCurrency } from "@/lib/currency";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -62,7 +63,7 @@ export function AssistantPanel() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: history.slice(-20), summary: buildSummary(inv.items, inv.movements) }),
+        body: JSON.stringify({ messages: history.slice(-20), summary: { ...buildSummary(inv.items, inv.movements), currency: getCurrency() } }),
         signal: ctrl.signal,
       });
       if (!res.ok || !res.body) {
