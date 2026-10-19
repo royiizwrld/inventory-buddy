@@ -1,3 +1,4 @@
+import { getCurrency } from "./currency";
 import type { Item } from "./types";
 import { labelCode, reorderLines, type ReorderOverrides } from "./asset-planning";
 
@@ -30,7 +31,7 @@ export async function reorderPdf(items: Item[], overrides?: ReorderOverrides) {
   doc.text("Stockroom — Reorder list", 14, 18);
   doc.setFontSize(10);
   doc.text(`Created ${new Date().toLocaleDateString()}`, 14, 26);
-  autoTable(doc, { startY: 32, head: [["Name", "SKU", "Location", "Current", "Level", "Order", "Unit price", "Est. cost"]],
+  autoTable(doc, { startY: 32, head: [["Name", "SKU", "Location", "Current", "Level", "Order", `Unit price (${getCurrency()})`, `Est. cost (${getCurrency()})`]],
     body: reorderLines(items, overrides).map(({ item: i, qty }) => [i.name, i.sku, i.location, i.quantity, i.reorderLevel, qty, i.unitPrice.toFixed(2), (qty * i.unitPrice).toFixed(2)]), styles: { fontSize: 9 }, theme: "grid" });
   return doc;
 }
@@ -42,7 +43,7 @@ export async function inventoryPdf(items: Item[]) {
   doc.text("Stockroom — Inventory list", 14, 18);
   doc.setFontSize(10);
   doc.text(`Created ${new Date().toLocaleDateString()} · ${items.length} items`, 14, 26);
-  autoTable(doc, { startY: 32, head: [["Name", "SKU", "Category", "Qty", "Unit price", "Value", "Location", "Status"]],
+  autoTable(doc, { startY: 32, head: [["Name", "SKU", "Category", "Qty", `Unit price (${getCurrency()})`, `Value (${getCurrency()})`, "Location", "Status"]],
     body: items.map((i) => [i.name, i.sku, i.category, i.quantity, i.unitPrice.toFixed(2), itemValue(i).toFixed(2), i.location || "—", STATUS_LABEL[getStatus(i)]]), styles: { fontSize: 9 }, theme: "grid" });
   return doc;
 }

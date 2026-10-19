@@ -1,3 +1,4 @@
+import { getCurrency } from "@/lib/currency";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -62,7 +63,7 @@ export function AssistantPanel() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: history.slice(-20), summary: buildSummary(inv.items, inv.movements) }),
+        body: JSON.stringify({ messages: history.slice(-20), summary: { ...buildSummary(inv.items, inv.movements), currency: getCurrency() } }),
         signal: ctrl.signal,
       });
       if (!res.ok || !res.body) {
@@ -148,7 +149,7 @@ export function AssistantPanel() {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} size="lg" className="fixed bottom-5 right-5 z-40 h-14 rounded-full px-5 shadow-lg" aria-label="Open inventory assistant">
+      <Button onClick={() => setOpen(true)} size="lg" className="fixed bottom-20 right-5 z-40 md:bottom-5 h-14 rounded-full px-5 shadow-lg" aria-label="Open inventory assistant">
         <Sparkles className="h-5 w-5" /> <span className="ml-1 hidden sm:inline">Ask AI</span>
       </Button>
       <Sheet open={open} onOpenChange={setOpen}>

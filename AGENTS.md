@@ -19,3 +19,4 @@
 - Include lazy camera and tab dependencies in Vite's initial optimization list — prevents late dependency rebuilds from mixing React module versions in an open preview.
 - Asset tracking fields are optional on the shared item type — older local inventory records and existing imports remain compatible.
 - Reorder and warranty calculations are pure helpers in `asset-planning.ts`; PDFs are generated on demand in the browser — keeps planning testable and inventory documents private to the device.
+- Display currency is a device setting in `src/lib/currency.ts`; amounts are labelled, never converted, and the shell remounts page content when it changes — keeps all money formatting in one helper.
