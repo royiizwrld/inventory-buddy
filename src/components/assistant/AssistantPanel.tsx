@@ -148,7 +148,7 @@ export function AssistantPanel() {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} size="lg" className="fixed bottom-5 right-5 z-40 h-14 rounded-full px-5 shadow-lg" aria-label="Open inventory assistant">
+      <Button onClick={() => setOpen(true)} size="lg" className="fixed bottom-20 right-5 z-40 md:bottom-5 h-14 rounded-full px-5 shadow-lg" aria-label="Open inventory assistant">
         <Sparkles className="h-5 w-5" /> <span className="ml-1 hidden sm:inline">Ask AI</span>
       </Button>
       <Sheet open={open} onOpenChange={setOpen}>
