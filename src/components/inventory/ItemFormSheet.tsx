@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useInventory } from "@/context/InventoryContext";
 import { DEFAULT_REORDER_LEVEL } from "@/lib/inventory";
 import type { Item, ItemInput } from "@/lib/types";
+import { ForeignPrice } from "./ForeignPrice";
 
 const blank: ItemInput = {
   name: "", sku: "", category: "Other", quantity: 0, unitPrice: 0, location: "", reorderLevel: DEFAULT_REORDER_LEVEL,
@@ -131,7 +132,7 @@ export function ItemFormSheet({ open, onOpenChange, item, defaults }: { open: bo
             {num("quantity", "Quantity")}
             {num("unitPrice", "Unit price", "0.01")}
             {num("reorderLevel", "Reorder level")}
-            <div />
+            <ForeignPrice onConvert={(v) => set("unitPrice", v)} />
             <CodeField id="barcode" label="Barcode" value={f.barcode} onChange={(v) => set("barcode", v)} />
             <CodeField id="qr" label="QR code / asset tag" value={f.qrCode} onChange={(v) => set("qrCode", v)} />
             {f.itemType === "asset" && <>
