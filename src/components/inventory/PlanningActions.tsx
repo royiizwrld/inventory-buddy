@@ -1,5 +1,6 @@
 import { formatCurrency } from "@/lib/currency";
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { ChevronDown, Download, FileSpreadsheet, FileText, ListPlus, Printer, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -51,6 +52,7 @@ export function ReorderButton({ items }: { items: Item[] }) {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-sm text-muted-foreground">{lines.length} items · Est. total {formatCurrency(total)}</p>
           <div className="flex gap-2">
+          <Button variant="outline" asChild><Link to="/reorder">Send to supplier</Link></Button>
           {edited && <Button variant="ghost" onClick={() => setOverrides({})}><RotateCcw className="h-4 w-4" /> Reset to suggestions</Button>}
           <DropdownMenu>
             <DropdownMenuTrigger asChild><Button disabled={busy || !lines.length}><Download className="h-4 w-4" /> {busy ? "Preparing…" : "Export"} <ChevronDown className="h-4 w-4" /></Button></DropdownMenuTrigger>

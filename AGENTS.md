@@ -20,3 +20,4 @@
 - Asset tracking fields are optional on the shared item type — older local inventory records and existing imports remain compatible.
 - Reorder and warranty calculations are pure helpers in `asset-planning.ts`; PDFs are generated on demand in the browser — keeps planning testable and inventory documents private to the device.
 - Display currency is a device setting in `src/lib/currency.ts`; amounts are labelled, never converted, and the shell remounts page content when it changes — keeps all money formatting in one helper.
+- Exchange rates come from a free keyless public API in `src/lib/exchange-rates.ts`, cached per base currency for 24h with stale fallback — prices are converted once at entry and stored in the app currency.

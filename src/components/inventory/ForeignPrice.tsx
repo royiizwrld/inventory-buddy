@@ -10,7 +10,7 @@ import { convertToBase, getRates, rateToBase } from "@/lib/exchange-rates";
 /** Lets the user enter a price paid in another currency and converts it to the app currency at today's rate. */
 export function ForeignPrice({ onConvert }: { onConvert: (amount: number) => void }) {
   const base = getCurrency();
-  const [from, setFrom] = useState(CURRENCIES.find((c) => c.code !== base)?.code ?? "USD");
+  const [from, setFrom] = useState<string>(CURRENCIES.find((c) => c.code !== base)?.code ?? "USD");
   const [amount, setAmount] = useState("");
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState("");

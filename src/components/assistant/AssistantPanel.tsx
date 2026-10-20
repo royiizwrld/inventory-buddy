@@ -1,4 +1,5 @@
-import { getCurrency } from "@/lib/currency";
+import { CURRENCIES, formatCurrency, getCurrency } from "@/lib/currency";
+import { getRates } from "@/lib/exchange-rates";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -13,7 +14,7 @@ import { buildSummary } from "@/lib/inventory";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type Action =
-  | { type: "restock"; sku: string; amount: number }
+  | { type: "restock"; sku: string; amount: number; unitPrice?: number }
   | { type: "set_reorder"; sku: string; level: number }
   | { type: "create_item"; name: string; quantity?: number; unitPrice?: number; category?: string; location?: string; sku?: string; itemType?: string };
 
@@ -59,11 +60,13 @@ export function AssistantPanel() {
     const ctrl = new AbortController();
     abortRef.current = ctrl;
     let acc = "";
+    let fx: Record<string, number> | null = null;
+    try { const r = await getRates(getCurrency()); fx = Object.fromEntries(CURRENCIES.map((c) => [c.code, r.rates[c.code] ?? 0])); } catch { fx = null; }
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: history.slice(-20), summary: { ...buildSummary(inv.items, inv.movements), currency: getCurrency() } }),
+        body: JSON.stringify({ messages: history.slice(-20), summary: { ...buildSummary(inv.items, inv.movements), currency: getCurrency(), categories: inv.categories, exchangeRates: fx ? { note: "1 unit of DATA.currency equals this many units of each currency", rates: fx } : null } }),
         signal: ctrl.signal,
       });
       if (!res.ok || !res.body) {
@@ -134,7 +137,15 @@ export function AssistantPanel() {
       }
       const item = inv.items.find((i) => i.sku.toLowerCase() === String(a.sku).toLowerCase());
       if (!item) continue;
-      if (a.type === "restock" && a.amount > 0) { inv.adjustStock(item.id, Math.floor(a.amount), { reason: "Purchase", source: "assistant" }); n++; }
+      if (a.type === "restock" && a.amount > 0) {
+        inv.adjustStock(item.id, Math.floor(a.amount), { reason: "Purchase", source: "assistant" });
+        const p = Number(a.unitPrice);
+        if (Number.isFinite(p) && p >= 0 && a.unitPrice !== undefined && p !== item.unitPrice) {
+          const { id: _id, createdAt: _c, updatedAt: _u, ...rest } = item;
+          inv.updateItem(item.id, { ...rest, quantity: item.quantity + Math.floor(a.amount), unitPrice: p });
+        }
+        n++;
+      }
       if (a.type === "set_reorder" && a.level >= 0) {
         const { id: _id, createdAt: _c, updatedAt: _u, ...rest } = item;
         inv.updateItem(item.id, { ...rest, reorderLevel: Math.floor(a.level) });
@@ -211,7 +222,7 @@ export function AssistantPanel() {
             <AlertDialogDescription asChild>
               <ul className="list-disc space-y-1 pl-5 text-sm">
                 {pending?.map((a, i) => (
-                  <li key={i}>{a.type === "create_item" ? `Add new item ${a.name} (qty ${Math.max(0, Math.floor(Number(a.quantity) || 0))}${a.unitPrice ? `, ${a.unitPrice} each` : ""})` : a.type === "restock" ? `Restock ${itemName(a.sku)} by +${a.amount}` : `Set reorder level of ${itemName(a.sku)} to ${a.level}`}</li>
+                  <li key={i}>{a.type === "create_item" ? `Add new item ${a.name} (qty ${Math.max(0, Math.floor(Number(a.quantity) || 0))}${a.unitPrice ? `, ${formatCurrency(Number(a.unitPrice))} each` : ""})` : a.type === "restock" ? `Restock ${itemName(a.sku)} by +${a.amount}${a.unitPrice !== undefined ? ` at ${formatCurrency(Number(a.unitPrice))} each` : ""}` : `Set reorder level of ${itemName(a.sku)} to ${a.level}`}</li>
                 ))}
               </ul>
             </AlertDialogDescription>

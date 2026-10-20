@@ -37,3 +37,11 @@ describe("reorder overrides", () => {
   it("zero removes item", () => { expect(_rl([it0], { a: 0 })).toHaveLength(0); });
   it("no override uses suggestion", () => { expect(_rl([it0])[0]!.qty).toBe(9); });
 });
+
+import { orderTotals } from "./asset-planning";
+describe("orderTotals", () => {
+  it("adds tax as a percentage and shipping as a flat amount", () => {
+    const t = orderTotals([{ itemId: "a", name: "A", sku: "A", qty: 10, unitCost: 120 }, { itemId: "b", name: "B", sku: "B", qty: 5, unitCost: 30 }], 16, 500);
+    expect(t).toEqual({ subtotal: 1350, tax: 216, shipping: 500, total: 2066 });
+  });
+});
