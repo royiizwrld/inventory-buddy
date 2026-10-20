@@ -1,4 +1,5 @@
 import type { Item } from "./types";
+import { getCurrency } from "./currency";
 
 export function suggestedReorder(item: Item) {
   if (item.itemType === "asset" || item.quantity > item.reorderLevel) return 0;
@@ -38,6 +39,17 @@ export function reorderCsv(items: Item[], overrides?: ReorderOverrides) {
     const safe = /^[=+\-@\t\r]/.test(s) ? `'${s}` : s;
     return `"${safe.replace(/"/g, '""')}"`;
   };
-  return ["Name,SKU,Location,Current quantity,Reorder level,Order quantity,Unit price,Estimated cost",
+  return [`Name,SKU,Location,Current quantity,Reorder level,Order quantity,Unit price (${getCurrency()}),Estimated cost (${getCurrency()})`,
     ...reorderLines(items, overrides).map(({ item: i, qty }) => [i.name, i.sku, i.location, i.quantity, i.reorderLevel, qty, i.unitPrice, qty * i.unitPrice].map(cell).join(","))].join("\r\n");
+}
+
+export type OrderLine = { itemId: string; name: string; sku: string; qty: number; unitCost: number };
+
+/** Supplier order totals; tax is a percentage of the subtotal, shipping a flat amount. */
+export function orderTotals(lines: OrderLine[], taxPercent = 0, shipping = 0) {
+  const round = (n: number) => Math.round(n * 100) / 100;
+  const subtotal = round(lines.reduce((s, l) => s + Math.max(0, l.qty) * Math.max(0, l.unitCost), 0));
+  const tax = round(subtotal * Math.max(0, taxPercent) / 100);
+  const ship = round(Math.max(0, shipping));
+  return { subtotal, tax, shipping: ship, total: round(subtotal + tax + ship) };
 }
