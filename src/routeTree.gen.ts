@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BulkRouteImport } from './routes/bulk'
+import { Route as ReorderRouteImport } from './routes/reorder'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ItemsIndexRouteImport } from './routes/items.index'
 import { Route as ItemsIdRouteImport } from './routes/items.$id'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const BulkRoute = BulkRouteImport.update({
   id: '/bulk',
   path: '/bulk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReorderRoute = ReorderRouteImport.update({
+  id: '/reorder',
+  path: '/reorder',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
@@ -44,6 +50,7 @@ const ItemsIdRoute = ItemsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bulk': typeof BulkRoute
+  '/reorder': typeof ReorderRoute
   '/api/chat': typeof ApiChatRoute
   '/items/$id': typeof ItemsIdRoute
   '/items/': typeof ItemsIndexRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bulk': typeof BulkRoute
+  '/reorder': typeof ReorderRoute
   '/api/chat': typeof ApiChatRoute
   '/items/$id': typeof ItemsIdRoute
   '/items': typeof ItemsIndexRoute
@@ -59,21 +67,30 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/bulk': typeof BulkRoute
+  '/reorder': typeof ReorderRoute
   '/api/chat': typeof ApiChatRoute
   '/items/$id': typeof ItemsIdRoute
   '/items/': typeof ItemsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/bulk' | '/api/chat' | '/items/$id' | '/items/'
+  fullPaths: '/' | '/bulk' | '/reorder' | '/api/chat' | '/items/$id' | '/items/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/bulk' | '/api/chat' | '/items/$id' | '/items'
-  id: '__root__' | '/' | '/bulk' | '/api/chat' | '/items/$id' | '/items/'
+  to: '/' | '/bulk' | '/reorder' | '/api/chat' | '/items/$id' | '/items'
+  id:
+    | '__root__'
+    | '/'
+    | '/bulk'
+    | '/reorder'
+    | '/api/chat'
+    | '/items/$id'
+    | '/items/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BulkRoute: typeof BulkRoute
+  ReorderRoute: typeof ReorderRoute
   ApiChatRoute: typeof ApiChatRoute
   ItemsIdRoute: typeof ItemsIdRoute
   ItemsIndexRoute: typeof ItemsIndexRoute
@@ -93,6 +110,13 @@ declare module '@tanstack/react-router' {
       path: '/bulk'
       fullPath: '/bulk'
       preLoaderRoute: typeof BulkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reorder': {
+      id: '/reorder'
+      path: '/reorder'
+      fullPath: '/reorder'
+      preLoaderRoute: typeof ReorderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
@@ -122,6 +146,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BulkRoute: BulkRoute,
+  ReorderRoute: ReorderRoute,
   ApiChatRoute: ApiChatRoute,
   ItemsIdRoute: ItemsIdRoute,
   ItemsIndexRoute: ItemsIndexRoute,

@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { Boxes, LayoutDashboard, Package, ScanLine, Settings, Wand2 } from "lucide-react";
+import { Boxes, LayoutDashboard, Package, ScanLine, Settings, ShoppingCart, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AssistantPanel } from "@/components/assistant/AssistantPanel";
 import { ScanDialog } from "@/components/inventory/ScanDialog";
@@ -11,6 +11,7 @@ const NAV = [
   { to: "/", label: "Dashboard", short: "Dashboard", icon: LayoutDashboard },
   { to: "/items", label: "Items", short: "Items", icon: Package },
   { to: "/bulk", label: "Smart Bulk Entry", short: "Bulk Entry", icon: Wand2 },
+  { to: "/reorder", label: "Supplier order", short: "Order", icon: ShoppingCart },
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -43,7 +44,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </header>
       <main key={currency} className="mx-auto max-w-7xl px-4 py-6">{children}</main>
-      <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-3 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
+      <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
         {NAV.map(({ to, short, icon: Icon }) => (
           <Link key={to} to={to} activeOptions={{ exact: to === "/" }}
             className="flex flex-col items-center gap-0.5 py-2 text-xs text-muted-foreground"

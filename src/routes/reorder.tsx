@@ -100,7 +100,6 @@ function ReorderPage() {
     setConfirmReceive(false);
     setLines(null);
     setInfo((p) => ({ ...p, poNumber: poLabel(next), deliveryDate: "", notes: "" }));
-    setTimeout(() => setLines(reorderLines(inv.items).length ? null : []), 0);
   };
 
   useEffect(() => { if (inv.ready && lines === null) setLines(suggested()); /* refill after receiving */ // eslint-disable-next-line react-hooks/exhaustive-deps
