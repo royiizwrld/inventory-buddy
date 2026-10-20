@@ -66,7 +66,7 @@ export function AssistantPanel() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: history.slice(-20), summary: { ...buildSummary(inv.items, inv.movements), currency: getCurrency(), exchangeRates: fx ? { note: "1 unit of DATA.currency equals this many units of each currency", rates: fx } : null } }),
+        body: JSON.stringify({ messages: history.slice(-20), summary: { ...buildSummary(inv.items, inv.movements), currency: getCurrency(), categories: inv.categories, exchangeRates: fx ? { note: "1 unit of DATA.currency equals this many units of each currency", rates: fx } : null } }),
         signal: ctrl.signal,
       });
       if (!res.ok || !res.body) {
