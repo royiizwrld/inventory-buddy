@@ -9,21 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
 import { Route as BulkRouteImport } from './routes/bulk'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ReorderRouteImport } from './routes/reorder'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ItemsIndexRouteImport } from './routes/items.index'
 import { Route as ItemsIdRouteImport } from './routes/items.$id'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BulkRoute = BulkRouteImport.update({
   id: '/bulk',
   path: '/bulk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReorderRoute = ReorderRouteImport.update({
@@ -48,16 +48,16 @@ const ItemsIdRoute = ItemsIdRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/bulk': typeof BulkRoute
+  '/dashboard': typeof DashboardRoute
   '/reorder': typeof ReorderRoute
   '/api/chat': typeof ApiChatRoute
   '/items/$id': typeof ItemsIdRoute
   '/items/': typeof ItemsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/bulk': typeof BulkRoute
+  '/dashboard': typeof DashboardRoute
   '/reorder': typeof ReorderRoute
   '/api/chat': typeof ApiChatRoute
   '/items/$id': typeof ItemsIdRoute
@@ -65,8 +65,8 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/bulk': typeof BulkRoute
+  '/dashboard': typeof DashboardRoute
   '/reorder': typeof ReorderRoute
   '/api/chat': typeof ApiChatRoute
   '/items/$id': typeof ItemsIdRoute
@@ -74,13 +74,15 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/bulk' | '/reorder' | '/api/chat' | '/items/$id' | '/items/'
+  fullPaths:
+    '/bulk' | '/dashboard' | '/reorder' | '/api/chat' | '/items/$id' | '/items/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/bulk' | '/reorder' | '/api/chat' | '/items/$id' | '/items'
+  to:
+    '/bulk' | '/dashboard' | '/reorder' | '/api/chat' | '/items/$id' | '/items'
   id:
     | '__root__'
-    | '/'
     | '/bulk'
+    | '/dashboard'
     | '/reorder'
     | '/api/chat'
     | '/items/$id'
@@ -88,8 +90,8 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   BulkRoute: typeof BulkRoute
+  DashboardRoute: typeof DashboardRoute
   ReorderRoute: typeof ReorderRoute
   ApiChatRoute: typeof ApiChatRoute
   ItemsIdRoute: typeof ItemsIdRoute
@@ -98,18 +100,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/bulk': {
       id: '/bulk'
       path: '/bulk'
       fullPath: '/bulk'
       preLoaderRoute: typeof BulkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reorder': {
@@ -144,8 +146,8 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   BulkRoute: BulkRoute,
+  DashboardRoute: DashboardRoute,
   ReorderRoute: ReorderRoute,
   ApiChatRoute: ApiChatRoute,
   ItemsIdRoute: ItemsIdRoute,
