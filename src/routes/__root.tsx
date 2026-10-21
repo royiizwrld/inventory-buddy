@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
   type ErrorComponentProps,
@@ -14,6 +15,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { InventoryProvider } from "@/context/InventoryContext";
 import { AppShell } from "@/components/layout/AppShell";
+import { PublicShell, isPublicPath } from "@/components/layout/PublicShell";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -131,6 +133,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useLocation({ select: (l) => l.pathname });
   useEffect(() => {
     const onPreloadError = (e: Event) => {
       const k = "stale-chunk-reload";
@@ -148,9 +151,13 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <InventoryProvider>
-        <AppShell>
-          <Outlet />
-        </AppShell>
+        {isPublicPath(pathname) ? (
+          <PublicShell><Outlet /></PublicShell>
+        ) : (
+          <AppShell>
+            <Outlet />
+          </AppShell>
+        )}
         <Toaster richColors position="bottom-left" />
       </InventoryProvider>
     </QueryClientProvider>

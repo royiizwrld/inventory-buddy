@@ -11,7 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BulkRouteImport } from './routes/bulk'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ReorderRouteImport } from './routes/reorder'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ItemsIndexRouteImport } from './routes/items.index'
 import { Route as ItemsIdRouteImport } from './routes/items.$id'
@@ -26,9 +31,34 @@ const BulkRoute = BulkRouteImport.update({
   path: '/bulk',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReorderRoute = ReorderRouteImport.update({
   id: '/reorder',
   path: '/reorder',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
@@ -50,7 +80,12 @@ const ItemsIdRoute = ItemsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bulk': typeof BulkRoute
+  '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
   '/reorder': typeof ReorderRoute
+  '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
   '/api/chat': typeof ApiChatRoute
   '/items/$id': typeof ItemsIdRoute
   '/items/': typeof ItemsIndexRoute
@@ -58,7 +93,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bulk': typeof BulkRoute
+  '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
   '/reorder': typeof ReorderRoute
+  '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
   '/api/chat': typeof ApiChatRoute
   '/items/$id': typeof ItemsIdRoute
   '/items': typeof ItemsIndexRoute
@@ -67,21 +107,53 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/bulk': typeof BulkRoute
+  '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
   '/reorder': typeof ReorderRoute
+  '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
   '/api/chat': typeof ApiChatRoute
   '/items/$id': typeof ItemsIdRoute
   '/items/': typeof ItemsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/bulk' | '/reorder' | '/api/chat' | '/items/$id' | '/items/'
+  fullPaths:
+    | '/'
+    | '/bulk'
+    | '/dashboard'
+    | '/login'
+    | '/privacy'
+    | '/reorder'
+    | '/signup'
+    | '/terms'
+    | '/api/chat'
+    | '/items/$id'
+    | '/items/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/bulk' | '/reorder' | '/api/chat' | '/items/$id' | '/items'
+  to:
+    | '/'
+    | '/bulk'
+    | '/dashboard'
+    | '/login'
+    | '/privacy'
+    | '/reorder'
+    | '/signup'
+    | '/terms'
+    | '/api/chat'
+    | '/items/$id'
+    | '/items'
   id:
     | '__root__'
     | '/'
     | '/bulk'
+    | '/dashboard'
+    | '/login'
+    | '/privacy'
     | '/reorder'
+    | '/signup'
+    | '/terms'
     | '/api/chat'
     | '/items/$id'
     | '/items/'
@@ -90,7 +162,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BulkRoute: typeof BulkRoute
+  DashboardRoute: typeof DashboardRoute
+  LoginRoute: typeof LoginRoute
+  PrivacyRoute: typeof PrivacyRoute
   ReorderRoute: typeof ReorderRoute
+  SignupRoute: typeof SignupRoute
+  TermsRoute: typeof TermsRoute
   ApiChatRoute: typeof ApiChatRoute
   ItemsIdRoute: typeof ItemsIdRoute
   ItemsIndexRoute: typeof ItemsIndexRoute
@@ -112,11 +189,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BulkRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reorder': {
       id: '/reorder'
       path: '/reorder'
       fullPath: '/reorder'
       preLoaderRoute: typeof ReorderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
@@ -146,7 +258,12 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BulkRoute: BulkRoute,
+  DashboardRoute: DashboardRoute,
+  LoginRoute: LoginRoute,
+  PrivacyRoute: PrivacyRoute,
   ReorderRoute: ReorderRoute,
+  SignupRoute: SignupRoute,
+  TermsRoute: TermsRoute,
   ApiChatRoute: ApiChatRoute,
   ItemsIdRoute: ItemsIdRoute,
   ItemsIndexRoute: ItemsIndexRoute,
