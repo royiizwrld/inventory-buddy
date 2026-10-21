@@ -8,7 +8,7 @@ import { SettingsDialog, useAppearance, useCurrency } from "./SettingsDialog";
 import { loadCurrency } from "@/lib/currency";
 
 const NAV = [
-  { to: "/", label: "Dashboard", short: "Dashboard", icon: LayoutDashboard },
+  { to: "/dashboard", label: "Dashboard", short: "Dashboard", icon: LayoutDashboard },
   { to: "/items", label: "Items", short: "Items", icon: Package },
   { to: "/bulk", label: "Smart Bulk Entry", short: "Bulk Entry", icon: Wand2 },
   { to: "/reorder", label: "Supplier order", short: "Order", icon: ShoppingCart },
@@ -24,13 +24,13 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen pb-36 md:pb-24">
       <header className="sticky top-0 z-30 border-b bg-background/85 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-7xl items-center gap-2 px-3 sm:gap-4 sm:px-4">
-          <Link to="/" className="flex min-w-0 items-center gap-2 font-display text-lg font-semibold">
+          <Link to="/dashboard" className="flex min-w-0 items-center gap-2 font-display text-lg font-semibold">
             <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground"><Boxes className="h-4 w-4" /></span>
             <span className="truncate">Stockroom</span>
           </Link>
           <nav className="hidden flex-1 items-center gap-1 md:flex">
             {NAV.map(({ to, label, icon: Icon }) => (
-              <Link key={to} to={to} activeOptions={{ exact: to === "/" }}
+              <Link key={to} to={to} activeOptions={{ exact: to === "/dashboard" }}
                 className="flex items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 activeProps={{ className: "bg-accent text-accent-foreground font-medium" }}>
                 <Icon className="h-4 w-4" /><span>{label}</span>
@@ -46,7 +46,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <main key={currency} className="mx-auto max-w-7xl px-4 py-6">{children}</main>
       <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
         {NAV.map(({ to, short, icon: Icon }) => (
-          <Link key={to} to={to} activeOptions={{ exact: to === "/" }}
+          <Link key={to} to={to} activeOptions={{ exact: to === "/dashboard" }}
             className="flex flex-col items-center gap-0.5 py-2 text-xs text-muted-foreground"
             activeProps={{ className: "text-primary font-medium" }}>
             <Icon className="h-5 w-5" /><span>{short}</span>
