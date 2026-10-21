@@ -48,7 +48,7 @@ const FEATURES = [
   { icon: FileSpreadsheet, title: "CSV import & export", text: "Bring in your existing list with a preview step, and export filtered items any time." },
 ];
 
-const ROLES = [
+const ROLES: [string, string][] = [
   ["Owner", "Full control, including billing of the workspace and deleting it."],
   ["Admin", "Manages members, settings and all items."],
   ["Manager", "Adds and edits items, orders stock."],
@@ -56,7 +56,7 @@ const ROLES = [
   ["Viewer", "Can look, can't change anything."],
 ];
 
-const FAQ = [
+const FAQ: [string, string][] = [
   ["Is it free?", "Yes, you can create an account and start using Stockroom for free."],
   ["Can my staff use it on their phones?", "Yes. It works in any modern phone browser, has a bottom menu on small screens, and can be added to your home screen like an app."],
   ["Can I control what staff can see and do?", "Yes. Each member gets a role (Owner, Admin, Manager, Staff or Viewer), and you can hide prices from staff."],
