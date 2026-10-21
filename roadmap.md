@@ -11,3 +11,9 @@
 - [x] Assistant restock-by-name with quantity/price/category filled before confirming.
 - [x] Supplier order page with editable lines, PDF order, email, receive into stock.
 - [x] Convert prices paid in other currencies at live rates.
+# Accounts, teams, sync & PWA
+- [x] Part 1: public landing page at /, dashboard at /dashboard, terms/privacy pages.
+- [ ] Part 2: sign up / sign in with Lovable Cloud (/login, /signup currently placeholders).
+- [ ] Part 3: shared workspaces, roles, invites, activity log, hide prices.
+- [ ] Part 4: cloud sync of inventory.
+- [ ] Part 5: installable PWA.
