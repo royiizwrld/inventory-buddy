@@ -49,7 +49,7 @@ const FEATURES = [
 ];
 
 const ROLES: [string, string][] = [
-  ["Owner", "Full control, including billing of the workspace and deleting it."],
+  ["Owner", "Full control of the workspace, including deleting it."],
   ["Admin", "Manages members, settings and all items."],
   ["Manager", "Adds and edits items, orders stock."],
   ["Staff", "Records restocks and removals."],
